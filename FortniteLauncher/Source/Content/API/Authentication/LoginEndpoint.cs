@@ -19,7 +19,7 @@ class Authenticator
         {
             var ApiResponse = await Client.ExecuteAsync(Request);
             if (string.IsNullOrWhiteSpace(ApiResponse.Content))
-                return ErrorResponse
+                return await ErrorResponse
                 (
                     "Please check your network connection or try again later. Make sure you're on a stable network without a VPN, mobile cellular data, or any network restrictions like firewalls or proxy settings that could interfere.",
                     "Network Connection Error"
@@ -27,7 +27,7 @@ class Authenticator
 
             var Response = JsonConvert.DeserializeObject<ApiResponse>(ApiResponse.Content);
             if (Response == null)
-                return ErrorResponse("Empty or invalid response from server.", "Login Error");
+                return await ErrorResponse("Empty or invalid response from server.", "Login Error");
 
             if (Response.Status == VerifyLoginStatus.Success.ToString())
             {
@@ -38,49 +38,49 @@ class Authenticator
                 return Response;
             }
 
-            return HandleLoginFailure(Response);
+            return await HandleLoginFailure(Response);
         }
         catch (Exception Error)
         {
-            return ErrorResponse(Error.Message, "Login Error");
+            return await ErrorResponse(Error.Message, "Login Error");
         }
     }
 
-    private static ApiResponse HandleLoginFailure(ApiResponse Response)
+    private static async Task<ApiResponse> HandleLoginFailure(ApiResponse Response)
     {
         switch (Response.Status)
         {
             case "Banned":
-                DialogService.ShowSimpleDialog($"You have been permanently banned from the {ProjectDefinitions.Name} Servers", "Failed to Sign In to Account");
+                await DialogService.ShowSimpleDialog($"You have been permanently banned from the {ProjectDefinitions.Name} Servers", "Failed to Sign In to Account");
                 break;
 
             case "Deny":
-                DialogService.ShowSimpleDialog("Access Denied", "Error: Deny");
+                await DialogService.ShowSimpleDialog("Access Denied", "Error: Deny");
                 break;
 
             case "Invalid":
-                DialogService.ShowSimpleDialog("Your email and/or password is invalid. To resolve this, reset your email and password to something simple, using only English alphabetic letters and numbers (without special characters), then log in again.", "Failed to Sign In to Account");
+                await DialogService.ShowSimpleDialog("Your email and/or password is invalid. To resolve this, reset your email and password to something simple, using only English alphabetic letters and numbers (without special characters), then log in again.", "Failed to Sign In to Account");
                 break;
 
             case "Error":
-                DialogService.ShowSimpleDialog($"Unknown Error, Restart {ProjectDefinitions.Name} Launcher", "Error");
+                await DialogService.ShowSimpleDialog($"Unknown Error, Restart {ProjectDefinitions.Name} Launcher", "Error");
                 break;
 
             case "OUTDATED":
-                DialogService.ShowSimpleDialog($"A new Launcher Update is available with New Features!\n\nCurrent Version: {Definitions.CurrentVersion}\nLatest Version: {Response.LatestVersion}\n\nTo continue playing:\n1. Close this Launcher & Uninstall completely\n2. Go to official {ProjectDefinitions.Name} Discord Server\n3. Download & Install new Launcher\n\nYou cannot play until you update to the latest version.", "Update Available!");
+                await DialogService.ShowSimpleDialog($"A new Launcher Update is available with New Features!\n\nCurrent Version: {Definitions.CurrentVersion}\nLatest Version: {Response.LatestVersion}\n\nTo continue playing:\n1. Close this Launcher & Uninstall completely\n2. Go to official {ProjectDefinitions.Name} Discord Server\n3. Download & Install new Launcher\n\nYou cannot play until you update to the latest version.", "Update Available!");
                 break;
 
             case "Donator":
-                DialogService.ShowSimpleDialog("Eon is currently in testing and available exclusively for donators.\nPublic testing will be announced in the Discord. For now, only donators can play. Visit the server for details and support.", "Early Access Notice");
+                await DialogService.ShowSimpleDialog("Eon is currently in testing and available exclusively for donators.\nPublic testing will be announced in the Discord. For now, only donators can play. Visit the server for details and support.", "Early Access Notice");
                 break;
         }
 
         return Response;
     }
 
-    private static ApiResponse ErrorResponse(string Message, string Title)
+    private static async Task<ApiResponse> ErrorResponse(string Message, string Title)
     {
-        DialogService.ShowSimpleDialog(Message, Title);
+        await DialogService.ShowSimpleDialog(Message, Title);
         return new ApiResponse { Status = VerifyLoginStatus.Error.ToString() };
     }
 }

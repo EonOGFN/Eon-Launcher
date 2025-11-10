@@ -1,7 +1,7 @@
 ﻿class Definitions
 {
     // API Endpoints
-    public const string CurrentVersion = "1.2.7";
+    public const string CurrentVersion = "1.2.8";
     public const string BaseURL = "https://services.eonfn.dev";
     public const string WebserverURL = "https://services.eonfn.dev:2096";
 

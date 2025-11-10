@@ -10,7 +10,7 @@ class LaunchStatusService
 
     public static void OnGameOpened()
     {
-        SetButtonState(CloseFortniteText, CloseIcon, isGameRunning: true);
+        SetButtonState(CloseFortniteText, CloseIcon, IsGameRunning: true);
     }
 
     public static void OnGameClosed(bool ForceClose = false)
@@ -18,22 +18,24 @@ class LaunchStatusService
         if (ForceClose)
             Processes.ForceCloseFortnite();
 
-        SetButtonState(PlayPage.Season, LaunchIcon, isGameRunning: false);
+        SetButtonState(PlayPage.Season, LaunchIcon, IsGameRunning: false);
     }
 
-    private static void SetButtonState(string Header, string Icon, bool isGameRunning)
+    private static void SetButtonState(string Header, string Icon, bool IsGameRunning)
     {
-        PlayPage.Launch_Button.Click -= OnCloseButtonClick;
+        var Button = PlayPage.Launch_Button;
+        if (Button == null)
+            return;
 
-        PlayPage.Launch_Button.Header = Header;
-        PlayPage.Launch_Button.Description = string.Empty;
-        PlayPage.Launch_Button.Content = null;
-        PlayPage.Launch_Button.HeaderIcon = new FontIcon { Glyph = Icon };
+        Button.Click -= OnCloseButtonClick;
+        Button.Header = Header;
+        Button.Description = string.Empty;
+        Button.Content = null;
+        Button.HeaderIcon = new FontIcon { Glyph = Icon };
+        Definitions.BindPlayButton = !IsGameRunning;
 
-        Definitions.BindPlayButton = !isGameRunning;
-
-        if (isGameRunning)
-            PlayPage.Launch_Button.Click += OnCloseButtonClick;
+        if (IsGameRunning)
+            Button.Click += OnCloseButtonClick;
     }
 
     private static void OnCloseButtonClick(object Sender, RoutedEventArgs Event)
