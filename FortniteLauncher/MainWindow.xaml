@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<windowex:WindowEx
+    x:Class="FortniteLauncher.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FortniteLauncher"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:AnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
+    xmlns:windowex="using:WinUIEx"
+    mc:Ignorable="d">
+
+    <Grid x:Name="RootGrid" Background="#202336">
+        <Grid.Resources>
+            <FontFamily x:Key="BricolageGrotesque">ms-appx:///Content/Font/Geist-VariableFont_wght.ttf#Geist</FontFamily>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid x:Name="AppTitleBar" 
+              Background="Transparent" 
+              Visibility="Visible" 
+              Margin="32,0,0,0" 
+              IsHitTestVisible="True" 
+              Canvas.ZIndex="3" 
+              Grid.Column="1" 
+              Grid.Row="0">
+            <Grid.OpacityTransition>
+                <ScalarTransition Duration="0:0:0.083"/>
+            </Grid.OpacityTransition>
+            <Image Source="ms-appx:///Content/Texture/Branding/Eon.ico"
+                   Width="21" 
+                   Height="21" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Left" 
+                   Margin="-17,-4,0,0"/>
+            <TextBlock x:Name="WindowTitle"
+                       Margin="25,0,0,0"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource CaptionTextBlockStyle}"
+                       Text="{x:Bind LauncherName}"
+                       FontFamily="{StaticResource BricolageGrotesque}"
+                       FontWeight="SemiBold"/>
+        </Grid>
+
+        <Frame x:Name="MainWindowFrame" Grid.Row="1" Grid.Column="1"/>
+    </Grid>
+</windowex:WindowEx>

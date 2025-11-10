@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="FortniteLauncher.Pages.DownloadsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Margin="58,32,58,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Installation Directory"
+                   Grid.Row="1"
+                   Margin="2,0,8,4"
+                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                   FontWeight="SemiBold"
+                   Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+
+        <Grid Grid.Row="2"
+              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+              CornerRadius="4"
+              Padding="8"
+              ColumnDefinitions="Auto,*,Auto"
+              VerticalAlignment="Center">
+
+            <FontIcon Glyph="&#xED25;"
+                      FontSize="30"
+                      Margin="0,0,12,0"
+                      Grid.Column="0"/>
+
+            <StackPanel Grid.Column="1" Spacing="2">
+                <TextBlock Text="{x:Bind CurrentPath, Mode=TwoWay}"
+                           FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBlock Text="{x:Bind BuildPath, Mode=TwoWay}"
+                           FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+
+            <Button Content="Change Install Path"
+                    Click="ChangeInstallPath"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    FontWeight="SemiBold"/>
+        </Grid>
+
+        <TextBlock Text="{x:Bind Season, Mode=TwoWay}"
+                   Grid.Row="3"
+                   Margin="2,8,8,4"
+                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                   FontWeight="SemiBold"
+                   Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+
+        <InfoBar x:Name="DownloadInProgressInfoBar"
+                 Title="{x:Bind DownloadTitle}"
+                 Message="Please keep the Launcher open while the download is in progress. Closing it or switching tabs could disrupt the download and create network problems.&#x0a;Note: It's normal for the total download size to adjust during the process."
+                 IsClosable="False"
+                 Grid.Row="4"
+                 Margin="0,4,0,4"
+                 FontWeight="SemiBold"/>
+
+        <Grid Grid.Row="5"
+              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+              Padding="8"
+              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+              CornerRadius="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <FontIcon Glyph="&#xE896;"
+                      FontSize="30"
+                      Margin="0,0,12,0"
+                      Grid.Column="0"/>
+
+            <StackPanel Grid.Column="1" Spacing="2">
+                <TextBlock Text="{x:Bind Install, Mode=TwoWay}"
+                           FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBlock Text="{x:Bind Install_Body, Mode=TwoWay}"
+                           FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+
+            <Button x:Name="DownloadBuildButton"
+                    Content="Start Download"
+                    Click="DownloadBuild"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    FontWeight="SemiBold"/>
+        </Grid>
+
+        <TextBlock Text="Uninstall Fortnite"
+                   Grid.Row="6"
+                   Margin="2,8,8,4"
+                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                   FontWeight="SemiBold"
+                   Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+
+        <Grid Grid.Row="7"
+              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+              Padding="8"
+              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+              CornerRadius="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <FontIcon Glyph="&#xE74D;"
+                      FontSize="30"
+                      Margin="0,0,12,0"
+                      Grid.Column="0"/>
+
+            <StackPanel Grid.Column="1" Spacing="2">
+                <TextBlock Text="{x:Bind Uninstall_Header, Mode=TwoWay}"
+                           FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBlock Text="{x:Bind Uninstall_Body, Mode=TwoWay}"
+                           FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+
+            <Button x:Name="Delete"
+                    Content="Start Removal"
+                    Click="DeleteBuild"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    FontWeight="SemiBold"/>
+        </Grid>
+
+        <TextBlock Text="Fortnite Integrity Check"
+                   Grid.Row="8"
+                   Margin="2,8,8,4"
+                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                   FontWeight="SemiBold"
+                   Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+
+        <Grid Grid.Row="9"
+              Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+              Padding="8"
+              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+              CornerRadius="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <FontIcon Glyph="&#xE9D5;"
+                      FontSize="30"
+                      Margin="0,0,12,0"
+                      Grid.Column="0"/>
+
+            <StackPanel Grid.Column="1" Spacing="2">
+                <TextBlock Text="{x:Bind Verify_Header, Mode=TwoWay}"
+                           FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBlock Text="Verify the integrity of corrupted FortniteGame files on your computer."
+                           Margin="0,4,0,0"
+                           FontWeight="SemiBold"/>
+            </StackPanel>
+
+            <Button x:Name="Verify"
+                    Content="Verify Build"
+                    Click="VerifyBuild"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    FontWeight="SemiBold"/>
+
+            <TeachingTip x:Name="DownloadInfo"
+                         Title="Downloading Build Checker"
+                         Subtitle="This may take several minutes, depending on your internet speed."
+                         FontWeight="SemiBold">
+                <TeachingTip.IconSource>
+                    <SymbolIconSource Symbol="Download"/>
+                </TeachingTip.IconSource>
+            </TeachingTip>
+        </Grid>
+    </Grid>
+</Page>

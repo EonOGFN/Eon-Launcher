@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="FortniteLauncher.Pages.MainShellPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FortniteLauncher.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d">
+
+    <Grid>
+        <NavigationView x:Name="MainNavigation"
+                        Loaded="MainNavigation_Loaded"
+                        PaneDisplayMode="Left"
+                        IsSettingsVisible="True"
+                        IsBackButtonVisible="Collapsed"
+                        IsPaneToggleButtonVisible="False"
+                        AlwaysShowHeader="True"
+                        IsTitleBarAutoPaddingEnabled="False"
+                        OpenPaneLength="52"
+                        IsPaneOpen="True"
+                        CompactModeThresholdWidth="0"
+                        ExpandedModeThresholdWidth="0"
+                        Background="#202336"
+                        SelectionChanged="MainNavigation_SelectionChanged">
+
+            <NavigationView.Resources>
+                <Thickness x:Key="NavigationViewHeaderMargin">56,26,0,0</Thickness>
+                <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="{StaticResource NavigationViewExpandedPaneBackground}"/>
+                <SolidColorBrush x:Key="NavigationViewContentBackground" Color="{StaticResource NavigationViewExpandedPaneBackground}"/>
+            </NavigationView.Resources>
+
+            <NavigationView.Header>
+                <BreadcrumbBar x:Name="MainBreadcrumb"
+                               FontSize="48"
+                               FontWeight="SemiBold"
+                               ItemClicked="MainBreadcrumb_ItemClicked">
+                    <BreadcrumbBar.Resources>
+                        <Style x:Key="BreadcrumbBarItemStyle" TargetType="BreadcrumbBarItem">
+                            <Setter Property="FontSize" Value="28"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Foreground" Value="{ThemeResource TextFillColorTertiaryBrush}"/>
+                        </Style>
+                        <x:Double x:Key="BreadcrumbBarChevronFontSize">12</x:Double>
+                        <Thickness x:Key="BreadcrumbBarChevronPadding">12,0</Thickness>
+                        <ThemeResource x:Key="BreadcrumbBarNormalForegroundBrush" ResourceKey="TextFillColorSecondaryBrush"/>
+                        <ThemeResource x:Key="BreadcrumbBarHoverForegroundBrush" ResourceKey="TextFillColorTertiaryBrush"/>
+                    </BreadcrumbBar.Resources>
+                    <BreadcrumbBar.ItemTemplate>
+                        <DataTemplate x:Name="BreadcrumbBarItemTemplate" x:DataType="BreadcrumbBarItem">
+                            <BreadcrumbBarItem Style="{StaticResource BreadcrumbBarItemStyle}"
+                                               Content="{Binding Content}">
+                                <BreadcrumbBarItem.ContentTransitions>
+                                    <TransitionCollection>
+                                        <ContentThemeTransition/>
+                                    </TransitionCollection>
+                                </BreadcrumbBarItem.ContentTransitions>
+                            </BreadcrumbBarItem>
+                        </DataTemplate>
+                    </BreadcrumbBar.ItemTemplate>
+                    <BreadcrumbBar.Transitions>
+                        <TransitionCollection>
+                            <ContentThemeTransition/>
+                        </TransitionCollection>
+                    </BreadcrumbBar.Transitions>
+                </BreadcrumbBar>
+            </NavigationView.Header>
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Name="PlayPageItem">
+                    <NavigationViewItem.Icon>
+                        <ImageIcon Width="24" Height="24" Margin="-4">
+                            <ImageIcon.Source>
+                                <SvgImageSource UriSource="ms-appx:///Content/Texture/Icons/IC_Play.svg"/>
+                            </ImageIcon.Source>
+                        </ImageIcon>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem x:Name="DownloadsItem">
+                    <NavigationViewItem.Icon>
+                        <ImageIcon Width="24" Height="24" Margin="-4">
+                            <ImageIcon.Source>
+                                <SvgImageSource UriSource="ms-appx:///Content/Texture/Icons/IC_Download.svg"/>
+                            </ImageIcon.Source>
+                        </ImageIcon>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem x:Name="ItemShopItem">
+                    <NavigationViewItem.Icon>
+                        <ImageIcon Width="24" Height="24" Margin="-4">
+                            <ImageIcon.Source>
+                                <SvgImageSource UriSource="ms-appx:///Content/Texture/Icons/IC_Shop.svg"/>
+                            </ImageIcon.Source>
+                        </ImageIcon>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem x:Name="LeaderboardItem">
+                    <NavigationViewItem.Icon>
+                        <ImageIcon Width="24" Height="24" Margin="-4">
+                            <ImageIcon.Source>
+                                <SvgImageSource UriSource="ms-appx:///Content/Texture/Icons/IC_Leaderboard.svg"/>
+                            </ImageIcon.Source>
+                        </ImageIcon>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem x:Name="ServerStatusItem">
+                    <NavigationViewItem.Icon>
+                        <ImageIcon Width="24" Height="24" Margin="-4">
+                            <ImageIcon.Source>
+                                <SvgImageSource UriSource="ms-appx:///Content/Texture/Icons/IC_ServerStatus.svg"/>
+                            </ImageIcon.Source>
+                        </ImageIcon>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <NavigationView.PaneFooter>
+                <Button x:Name="PaneContent"
+                        Visibility="Collapsed"
+                        Padding="6"
+                        Background="Transparent"
+                        BorderThickness="1"
+                        Click="PaneContent_Click"
+                        VerticalContentAlignment="Center"
+                        BorderBrush="Transparent"
+                        Margin="4,2,4,2"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Left"
+                        FontWeight="SemiBold">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0">
+                            <Grid HorizontalAlignment="Left">
+                                <Grid x:Name="PFP" VerticalAlignment="Center">
+                                    <Ellipse Width="50" Height="50">
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="/Assets/PFP.jpg"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                        <AppBarSeparator Grid.Column="1" Margin="8,0,0,0"/>
+                        <FontIcon Glyph="&#xE713;" Grid.Column="2" VerticalAlignment="Center" Margin="8,0,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </Grid>
+                </Button>
+            </NavigationView.PaneFooter>
+
+            <Frame x:Name="RootFrame" Margin="0,0,0,0"/>
+        </NavigationView>
+    </Grid>
+</Page>
