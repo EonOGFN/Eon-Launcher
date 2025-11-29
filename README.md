@@ -3,4 +3,4 @@
 
 > OG Fortnite Launcher made for **Eon**.
 
-<img width="1184" height="716" alt="Image" src="https://github.com/user-attachments/assets/364d7c8b-2d75-49e5-a9f8-46b4f8c8426a" />
+<img width="1184" height="716" alt="image" src="https://github.com/user-attachments/assets/a0fa3c15-1257-43d8-a5f2-f3512892463d" />
