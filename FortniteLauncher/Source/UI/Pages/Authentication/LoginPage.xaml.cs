@@ -37,7 +37,6 @@ namespace FortniteLauncher.Pages
             switch (Response.Status)
             {
                 case "Success":
-                    Definitions.LoggedIn = true;
                     if (Convert.ToBoolean(RememberMeCheckBox.IsChecked))
                     {
                         GlobalSettings.Options.Email = MailBox.Text;
@@ -75,7 +74,6 @@ namespace FortniteLauncher.Pages
                         HorizontalAlignment = HorizontalAlignment.Center
                     };
 
-                    Definitions.LoggedOut = false;
                     ApiResponse LoginResponse = await Authenticator.CheckLogin(MailBox.Text, PasswordBox.Password);
                     string LoginStatus = LoginResponse.Status.ToString();
 

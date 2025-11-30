@@ -85,7 +85,6 @@ namespace FortniteLauncher.Pages
                 GlobalSettings.Options.Password = string.Empty;
                 UserSettings.SaveSettings();
 
-                Definitions.LoggedOut = true;
                 var Button = (Button)Sender;
                 Button.IsEnabled = false;
 
