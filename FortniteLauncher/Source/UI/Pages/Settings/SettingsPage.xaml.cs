@@ -11,7 +11,7 @@ namespace FortniteLauncher.Pages
 
         private readonly string About_Header = $"About {ProjectDefinitions.Name} Launcher";
         private readonly string GitHub_Juri = ProjectDefinitions.GitHub_Juri;
-        private readonly string Github_David = ProjectDefinitions.GitHub_David;
+        private readonly string Github_Greenwood = ProjectDefinitions.GitHub_Greenwood;
         private readonly string Discord = ProjectDefinitions.Discord;
         private readonly string Tiktok = ProjectDefinitions.Tiktok;
 
@@ -23,7 +23,6 @@ namespace FortniteLauncher.Pages
         private void PageLoaded(object Sender, RoutedEventArgs Event)
         {
             SoundToggle.IsOn = GlobalSettings.Options.IsSoundEnabled;
-            WorldCupToggle.IsOn = GlobalSettings.Options.IsWCLobbyEnabled;
             BubbleBuildsToggle.IsOn = GlobalSettings.Options.IsBubbleBuildsEnabled;
         }
 
@@ -43,22 +42,6 @@ namespace FortniteLauncher.Pages
 
             UserSettings.SaveSettings();
         }
-        private void ToggleWorldCup(object Sender, RoutedEventArgs Event)
-        {
-            if (WorldCupToggle.IsOn)
-            {
-                ElementSoundPlayer.State = ElementSoundPlayerState.On;
-                GlobalSettings.Options.IsWCLobbyEnabled = true;
-            }
-            else
-            {
-                ElementSoundPlayer.State = ElementSoundPlayerState.Off;
-                GlobalSettings.Options.IsWCLobbyEnabled = false;
-            }
-
-            UserSettings.SaveSettings();
-        }
-
         private void ToggleBubbleBuilds(object Sender, RoutedEventArgs Event)
         {
             if (BubbleBuildsToggle.IsOn)

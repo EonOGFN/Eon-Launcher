@@ -17,14 +17,17 @@ class Processes
         if (OnErrorCode)
            LaunchStatusService.OnGameClosed();
 
-        Kill("Epic");
-        Kill("Eon_EAC");
-        Kill("EpicGamesLauncher");
+        Kill("FModel");
+
+        Kill("FortniteLauncher");
         Kill("FortniteClient-Win64-Shipping");
         Kill("FortniteClient-Win64-Shipping_EAC");
         Kill("FortniteClient-Win64-Shipping_BE");
+
+        Kill("Eon_EAC");
         Kill("Easy Anti-Cheat Bootstrapper");
+
+        Kill("EpicGamesLauncher");
         Kill("CrashReportClient");
-        Kill("FortniteLauncher");
     }
 }

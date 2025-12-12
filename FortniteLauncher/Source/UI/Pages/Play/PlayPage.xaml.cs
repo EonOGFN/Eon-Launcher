@@ -15,10 +15,27 @@ namespace FortniteLauncher.Pages
         public static SettingsCard Launch_Button;
         public static ProgressRing ProgressRing;
         private string Progress = DownloadService.DownloadProgress;
-        private readonly string DisplayUsername = $"Welcome, {GlobalSettings.Options.Username}!";
-        private readonly string Description = $"Relive the best Chapter {ProjectDefinitions.Chapter} Season {ProjectDefinitions.Season} experience with {ProjectDefinitions.Name}.";
+        private readonly string DisplayUsername = GetRandomGreeting();
+        private readonly string Description = $"Experience the best Chapter {ProjectDefinitions.Chapter} Season {ProjectDefinitions.Season} experience with {ProjectDefinitions.Name}.";
         public static readonly string Season = "Launch Fortnite";
         public static readonly string Chapter = string.Empty;
+
+        private static string GetRandomGreeting()
+        {
+            string Username = GlobalSettings.Options.Username;
+            string[] Greetings = new[]
+            {
+                $"Hello, {Username}!",
+                $"Welcome, {Username}!",
+                $"Hey, {Username}!",
+                $"What's up, {Username}!",
+                $"Greetings, {Username}!",
+                $"Hi, {Username}!",
+                $"Howdy, {Username}!"
+            };
+            var Random = new Random();
+            return Greetings[Random.Next(Greetings.Length)];
+        }
 
         public PlayPage()
         {
@@ -31,20 +48,25 @@ namespace FortniteLauncher.Pages
         protected override void OnNavigatedTo(NavigationEventArgs EventArgs)
         {
             base.OnNavigatedTo(EventArgs);
-            HeaderBlurBorder.Opacity = 0.7;
+            AnimateBlur();
+        }
 
-            var Storyboard = new Storyboard();
-            var FadeAnimation = new DoubleAnimation
+        private void AnimateBlur()
+        {
+            var Animation = new Storyboard();
+            var ColorAnimation = new ColorAnimation
             {
-                From = 0.7,
-                To = 1.0,
+                From = Windows.UI.Color.FromArgb(178, 0, 0, 0),
+                To = Windows.UI.Color.FromArgb(204, 0, 0, 0),
                 Duration = TimeSpan.FromMilliseconds(1250),
+                EnableDependentAnimation = true,
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }
             };
-            Storyboard.SetTarget(FadeAnimation, HeaderBlurBorder);
-            Storyboard.SetTargetProperty(FadeAnimation, "Opacity");
-            Storyboard.Children.Add(FadeAnimation);
-            Storyboard.Begin();
+
+            Storyboard.SetTarget(ColorAnimation, OverlayBrush);
+            Storyboard.SetTargetProperty(ColorAnimation, "Color");
+            Animation.Children.Add(ColorAnimation);
+            Animation.Begin();
         }
 
         private async void Launch(object Sender, RoutedEventArgs EventArgs)
@@ -78,7 +100,7 @@ namespace FortniteLauncher.Pages
             while (DownloadInfo.IsOpen)
             {
                 DispatcherQueue.TryEnqueue(() => DownloadInfo.Subtitle = DownloadService.DownloadProgress);
-                await Task.Delay(20);
+                await Task.Delay(5);
             }
             DownloadInfo.IsOpen = false;
         }
@@ -91,9 +113,7 @@ namespace FortniteLauncher.Pages
         }
 
         private void OpenUri(string URI) => Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = URI });
-
         private void Tiktok(object Sender, RoutedEventArgs EventArgs) => OpenUri(ProjectDefinitions.Tiktok);
-
-        private void Discord(object Sender, RoutedEventArgs EventArgs) => OpenUri(ProjectDefinitions.Discord);
+        private void Donations(object Sender, RoutedEventArgs EventArgs) => OpenUri(ProjectDefinitions.DonationsURL);
     }
 }

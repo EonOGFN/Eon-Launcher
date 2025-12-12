@@ -14,7 +14,7 @@
                       VerticalAlignment="Center" />
 
         <WebView2 x:Name="MyWebView" 
-                  Width="1000" 
+                  Width="1175" 
                   Height="725" 
                   VerticalAlignment="Top" 
                   HorizontalAlignment="Center"

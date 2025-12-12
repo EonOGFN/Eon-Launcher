@@ -104,14 +104,13 @@
 	<ItemGroup>
 		<Content Include="Content\Texture\Branding\Eon.ico" />
 		<Content Include="Content\Texture\Icons\IC_Download.svg" />
-		<Content Include="Content\Texture\UI\T_Leaderboard.png" />
 		<Content Include="Content\Texture\Icons\IC_Leaderboard.svg" />
 		<Content Include="Content\Texture\Icons\IC_Play.svg" />
 		<Content Include="Content\Texture\Icons\IC_ServerStatus.svg" />
 		<Content Include="Content\Texture\Icons\IC_Shop.svg" />
 		<Content Include="Content\Texture\UI\T_Banner.png" />
 		<Content Include="Content\Texture\UI\T_BattleBus.png" />
-		<Content Include="Content\Texture\UI\T_Discord.png">
+		<Content Include="Content\Texture\UI\T_Donate.png">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Content\Texture\UI\T_Tiktok.png" />

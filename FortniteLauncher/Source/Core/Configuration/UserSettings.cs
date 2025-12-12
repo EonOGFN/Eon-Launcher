@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
+using Newtonsoft.Json;
 
 class UserSettings
 {
@@ -50,11 +50,14 @@ class UserSettings
     {
         return new AppConfig
         {
-            IsSoundEnabled = true,
-            IsWCLobbyEnabled = false,
-            FortnitePath = string.Empty,
+            Username = string.Empty,
             Email = string.Empty,
-            Password = string.Empty
+            Password = string.Empty,
+            FortnitePath = string.Empty,
+            IsSoundEnabled = false,
+            IsBubbleBuildsEnabled = false,
+            RedirectProtected = false,
+            SkinUrl = string.Empty,
         };
     }
 }

@@ -41,7 +41,6 @@ class RequiredFilesDownloader
         }
 
         await RedirectHandler.DownloadFile();
-        Client.ApplyWindowsClientFix();
     }
 
     private static void ShowDownloadMessage()

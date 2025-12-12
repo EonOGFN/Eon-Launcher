@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:FortniteLauncher.Pages"
     xmlns:controls="using:CommunityToolkit.Labs.WinUI"
-    xmlns:media="using:CommunityToolkit.WinUI.UI.Media"
     NavigationCacheMode="Enabled">
 
     <Grid Margin="8">
@@ -22,9 +21,9 @@
                     </Image.Source>
                 </Image>
 
-                <Border x:Name="HeaderBlurBorder" CornerRadius="8" Opacity="0.7">
+                <Border x:Name="HeaderBlurBorder" CornerRadius="8">
                     <Border.Background>
-                        <media:AcrylicBrush TintColor="Black" TintOpacity="0.6" BlurAmount="1.0"/>
+                        <SolidColorBrush x:Name="OverlayBrush" Color="#B2000000"/>
                     </Border.Background>
                 </Border>
             </Grid>
@@ -79,28 +78,29 @@
         <Grid Grid.Row="1" Margin="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="4"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <controls:SettingsCard x:Name="DiscordCard"
-                                   Header="Discord"
-                                   Description="Join the community for updates and events."
-                                   Click="Discord"
+            <controls:SettingsCard x:Name="DonationsCard"
+                                   Grid.Column="0"
+                                   Header="Donations"
+                                   Description="Contribute to the community and unlock exclusive perks."
+                                   Click="Donations"
                                    FontWeight="SemiBold">
                 <controls:SettingsCard.HeaderIcon>
-                    <ImageIcon Source="ms-appx:///Content/Texture/UI/T_Discord.png"/>
+                    <ImageIcon Source="ms-appx:///Content/Texture/UI/T_Donate.png"/>
                 </controls:SettingsCard.HeaderIcon>
-                <Button x:Name="DiscordButton" 
-                        Click="Discord" 
-                        Content="Join"
+                <Button x:Name="DonationsButton" 
+                        Click="Donations" 
+                        Content="Donate"
                         FontWeight="SemiBold"/>
             </controls:SettingsCard>
 
             <controls:SettingsCard x:Name="TiktokCard"
-                                   Grid.Column="1"
+                                   Grid.Column="2"
                                    Header="Tiktok"
                                    Description="Follow us for sneak peeks and exclusive content."
-                                   Margin="4,0,0,0"
                                    Click="Tiktok"
                                    FontWeight="SemiBold">
                 <controls:SettingsCard.HeaderIcon>
@@ -108,7 +108,7 @@
                 </controls:SettingsCard.HeaderIcon>
                 <Button x:Name="TiktokButton" 
                         Click="Tiktok" 
-                        Content="Watch"
+                        Content="View"
                         FontWeight="SemiBold"/>
             </controls:SettingsCard>
         </Grid>
