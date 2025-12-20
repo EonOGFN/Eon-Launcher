@@ -1,8 +1,10 @@
-using Microsoft.UI.Text;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
 using System;
+using System.IO;
+using System.Text.Json;
+using Microsoft.UI.Xaml;
+using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
 
 namespace FortniteLauncher.Pages
 {
@@ -13,114 +15,149 @@ namespace FortniteLauncher.Pages
             this.InitializeComponent();
         }
 
-        private async void LoginButton(object Sender, RoutedEventArgs Event)
+        private async void PageLoaded(object Sender, RoutedEventArgs EventArgs)
         {
-            bool IsEmailEmpty = string.IsNullOrWhiteSpace(MailBox.Text);
-            bool IsPasswordEmpty = string.IsNullOrWhiteSpace(PasswordBox.Password);
-
-            if (IsEmailEmpty || IsPasswordEmpty)
+            try
             {
-                ShowAccessDeniedError("Email/Password is required.");
+                await LoginWebView.EnsureCoreWebView2Async();
+
+                string BasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Source", "UI", "Pages", "Authentication", "Public");
+                string HtmlPath = Path.Combine(BasePath, "LoginPage.html");
+                string CssPath = Path.Combine(BasePath, "LoginPage.css");
+                string JsPath = Path.Combine(BasePath, "LoginPage.js");
+
+                if (File.Exists(HtmlPath) && File.Exists(CssPath) && File.Exists(JsPath))
+                {
+                    string HtmlContent = File.ReadAllText(HtmlPath);
+                    string CssContent = File.ReadAllText(CssPath);
+                    string JsContent = File.ReadAllText(JsPath);
+
+                    string CombinedHtml = HtmlContent
+                        .Replace("<link rel=\"stylesheet\" href=\"LoginPage.css\">", $"<style>{CssContent}</style>")
+                        .Replace("<script src=\"LoginPage.js\"></script>", $"<script>{JsContent}</script>");
+
+                    LoginWebView.NavigateToString(CombinedHtml);
+                }
+
+                LoginWebView.CoreWebView2.WebMessageReceived += MessageReceived;
+            }
+            catch (Exception Exception)
+            {
+                DialogService.ShowSimpleDialog($"Error loading WebView2: {Exception.Message}", "Error");
+            }
+        }
+
+        private async void MessageReceived(CoreWebView2 Sender, CoreWebView2WebMessageReceivedEventArgs Args)
+        {
+            try
+            {
+                var Message = JsonSerializer.Deserialize<LoginMessage>(Args.WebMessageAsJson);
+
+                if (Message?.Action == "CheckCredentials")
+                {
+                    await CheckCredentials();
+                }
+                else if (Message?.Action == "Login")
+                {
+                    await HandleLogin(Message);
+                }
+            }
+            catch (Exception Exception)
+            {
+                DialogService.ShowSimpleDialog($"Error handling message: {Exception.Message}", "Error");
+                await SendMessageToWebView(new
+                {
+                    Status = "Error",
+                    Title = "Error",
+                    Message = Exception.Message
+                });
+            }
+        }
+
+        private async Task CheckCredentials()
+        {
+            if (!string.IsNullOrEmpty(GlobalSettings.Options.Email) && !string.IsNullOrEmpty(GlobalSettings.Options.Password))
+            {
+                ApiResponse Response = await Authenticator.CheckLogin(GlobalSettings.Options.Email, GlobalSettings.Options.Password);
+
+                await SendMessageToWebView(new
+                {
+                    Action = "AutoLogin",
+                    Status = Response.Status,
+                    Username = GlobalSettings.Options.Username ?? "Player",
+                    SkinUrl = GlobalSettings.Options.SkinUrl ?? "https://cdn.eonfn.dev/EonS17.png",
+                    DownloadUrl = ProjectDefinitions.DownloadBuildURL
+                });
+
+                if (Response.Status == "Success")
+                {
+                    await Task.Delay(2000);
+                    MainWindow.ShellFrame.Navigate(typeof(MainShellPage));
+                }
                 return;
             }
 
-            LoginBtn.IsEnabled = false;
-            LoginBtn.Content = new ProgressRing
-            {
-                IsIndeterminate = true,
-                Foreground = new SolidColorBrush(Microsoft.UI.Colors.Black),
-                HorizontalAlignment = HorizontalAlignment.Center
-            };
-
-            ApiResponse Response = await Authenticator.CheckLogin(MailBox.Text, PasswordBox.Password);
-
-            switch (Response.Status)
-            {
-                case "Success":
-                    if (Convert.ToBoolean(RememberMeCheckBox.IsChecked))
-                    {
-                        GlobalSettings.Options.Email = MailBox.Text;
-                        GlobalSettings.Options.Password = PasswordBox.Password;
-                        UserSettings.SaveSettings();
-                    }
-                    MainWindow.ShellFrame.Navigate(typeof(MainShellPage));
-                break;
-
-                default:
-                LoginBtn.Content = "Login";
-                LoginBtn.IsEnabled = true;
-                break;
-            }
+            await SendMessageToWebView(new { Action = "ShowLogin" });
         }
 
-        private async void PageLoaded(object Sender, RoutedEventArgs Event)
+        private async Task HandleLogin(LoginMessage Message)
         {
-            if (Convert.ToBoolean(RememberMeCheckBox.IsChecked))
+            ApiResponse Response = await Authenticator.CheckLogin(Message.Email, Message.Password);
+
+            if (Response.Status == "Success")
             {
-                bool Email = !string.IsNullOrEmpty(GlobalSettings.Options.Email);
-                bool Password = !string.IsNullOrEmpty(GlobalSettings.Options.Password);
+                GlobalSettings.Options.Email = Message.Email;
+                GlobalSettings.Options.Password = Message.Password;
 
-                if (Email && Password)
+                if (Message.RememberMe)
                 {
-                    MailBox.Text = GlobalSettings.Options.Email;
-                    PasswordBox.Password = GlobalSettings.Options.Password;
-
-                    LoginBtn.IsEnabled = false;
-
-                    LoginBtn.Content = new ProgressRing
-                    {
-                        IsIndeterminate = true,
-                        Foreground = new SolidColorBrush(Microsoft.UI.Colors.Black),
-                        HorizontalAlignment = HorizontalAlignment.Center
-                    };
-
-                    ApiResponse LoginResponse = await Authenticator.CheckLogin(MailBox.Text, PasswordBox.Password);
-                    string LoginStatus = LoginResponse.Status.ToString();
-
-                    if (LoginStatus == "Success")
-                    {
-                        if (Convert.ToBoolean(RememberMeCheckBox.IsChecked))
-                        {
-                            GlobalSettings.Options.Email = MailBox.Text;
-                            GlobalSettings.Options.Password = PasswordBox.Password;
-                            UserSettings.SaveSettings();
-                        }
-
-                        MainWindow.ShellFrame.Navigate(typeof(MainShellPage));
-                        return;
-                    }
-
-                    LoginBtn.IsEnabled = true;
-                    LoginBtn.Content = "Login";
+                    UserSettings.SaveSettings();
                 }
             }
+
+            await SendMessageToWebView(new
+            {
+                Action = "LoginResponse",
+                Status = Response.Status,
+                Username = GlobalSettings.Options.Username ?? "Player",
+                SkinUrl = GlobalSettings.Options.SkinUrl ?? "https://cdn.eonfn.dev/EonS17.png",
+                DownloadUrl = ProjectDefinitions.DownloadBuildURL
+            });
+
+            if (Response.Status == "Success")
+            {
+                await Task.Delay(2000);
+                MainWindow.ShellFrame.Navigate(typeof(MainShellPage));
+            }
         }
 
-        private void ShowAccessDeniedError(string Message)
+        private async Task SendMessageToWebView(object Data)
         {
-            StackPanel Panel = new StackPanel { Spacing = 2 };
-
-            TextBlock Tittle = new TextBlock { Text = "Access Denied", FontWeight = FontWeights.Medium };
-            TextBlock Description = new TextBlock { Text = Message };
-
-            Panel.Children.Add(Tittle);
-            Panel.Children.Add(Description);
-
-            Grid g = new Grid();
-            g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            g.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-
-            FontIcon Icon = new FontIcon { VerticalAlignment = VerticalAlignment.Center, Glyph = "\uE72E", FontSize = 28, Margin = new Thickness(0, 0, 12, 0) };
-
-            g.Children.Add(Icon);
-            g.Children.Add(Panel);
-
-            Grid.SetColumn(Icon, 0);
-            Grid.SetColumn(Panel, 1);
-
-            ErrorNotification.Show(g, 2500);
+            try
+            {
+                string Json = JsonSerializer.Serialize(Data);
+                string Script = 
+                $@"
+                    if (window.chrome && window.chrome.webview) {{
+                        window.dispatchEvent(new MessageEvent('message', {{ 
+                            data: {Json} 
+                        }}));
+                    }}
+                ";
+                await LoginWebView.CoreWebView2.ExecuteScriptAsync(Script);
+            }
+            catch (Exception Exception)
+            {
+                DialogService.ShowSimpleDialog($"Error sending message to WebView: {Exception.Message}", "Error");
+            }
         }
 
-        private void Hyperlink(object Sender, RoutedEventArgs Event) => Windows.System.Launcher.LaunchUriAsync(((HyperlinkButton)Sender).NavigateUri);
+        private class LoginMessage
+        {
+            public string Action { get; set; }
+            public string Email { get; set; }
+            public string Password { get; set; }
+            public bool RememberMe { get; set; }
+        }
     }
 }

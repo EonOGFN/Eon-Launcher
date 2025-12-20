@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="LoginPage.css">
+</head>
+<body>
+    <div class="loading-screen" id="LoadingScreen">
+        <div class="loading-logo">
+            <img src="https://cdn.eonfn.dev/EonS17.png" alt="Eon Logo" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+        <div class="loading-text">Preparing Launcher</div>
+        <div class="loading-subtext">Please wait a moment...</div>
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="welcome-screen" id="WelcomeScreen">
+        <div class="welcome-logo" id="WelcomeLogo">
+        </div>
+        <h1 class="welcome-title" id="WelcomeTitle">Welcome Back, Player!</h1>
+        <p class="welcome-subtitle">Loading your profile...</p>
+    </div>
+
+    <div class="banned-modal-overlay" id="BannedModal">
+        <div class="banned-modal">
+            <div class="banned-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM4 12C4 7.58 7.58 4 12 4C13.85 4 15.55 4.63 16.9 5.69L5.69 16.9C4.63 15.55 4 13.85 4 12ZM12 20C10.15 20 8.45 19.37 7.1 18.31L18.31 7.1C19.37 8.45 20 10.15 20 12C20 16.42 16.42 20 12 20Z" fill="white" />
+                </svg>
+            </div>
+            <h2 class="banned-title">Account Banned</h2>
+            <p class="banned-message">You have been permanently banned from the servers. If you believe this is a mistake, please contact support.</p>
+            <a href="https://discord.gg/GJf3neUncp" class="banned-button" target="_blank">Contact Support</a>
+        </div>
+    </div>
+
+    <div class="donator-modal-overlay" id="DonatorModal">
+        <div class="donator-modal">
+            <div class="donator-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" fill="white" />
+                </svg>
+            </div>
+            <h2 class="donator-title">Early Access</h2>
+            <p class="donator-message">Early access is currently available for donators only. Support the project to gain access!</p>
+            <a href="https://discord.gg/GJf3neUncp" class="donator-button" target="_blank">Become a Donator</a>
+        </div>
+    </div>
+
+    <div class="update-modal-overlay" id="UpdateModal">
+        <div class="update-modal">
+            <div class="update-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" fill="white" />
+                </svg>
+            </div>
+            <h2 class="update-title">Update Required</h2>
+            <p class="update-message">Your launcher version is outdated. Please download and install the latest version to continue.</p>
+            <a id="UpdateButton" class="update-button" href="#" target="_blank">Download Latest Version</a>
+        </div>
+    </div>
+
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <div class="container" id="LoginContainer">
+        <div class="login-box">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="https://cdn.eonfn.dev/EonS17.png" alt="Eon Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <h1 class="welcome-text">Eon</h1>
+                <p class="subtitle">Sign in to access your account</p>
+            </div>
+
+            <form id="LoginForm">
+                <div class="form-group">
+                    <label class="form-label" for="EmailInput">Email Address</label>
+                    <div class="input-wrapper">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 4H4C2.9 4 2.01 4.9 2.01 6L2 18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8L12 13L4 8V6L12 11L20 6V8Z" fill="white" />
+                        </svg>
+                        <input type="email" id="EmailInput" placeholder="Enter Email" autocomplete="email" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="PasswordInput">Password</label>
+                    <div class="input-wrapper">
+                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 8H17V6C17 3.24 14.76 1 12 1C9.24 1 7 3.24 7 6V8H6C4.9 8 4 8.9 4 10V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V10C20 8.9 19.1 8 18 8ZM12 17C10.9 17 10 16.1 10 15C10 13.9 10.9 13 12 13C13.1 13 14 13.9 14 15C14 16.1 13.1 17 12 17ZM15.1 8H8.9V6C8.9 4.29 10.29 2.9 12 2.9C13.71 2.9 15.1 4.29 15.1 6V8Z" fill="white" />
+                        </svg>
+                        <input type="password" id="PasswordInput" placeholder="••••••••" autocomplete="current-password" required>
+                        <button type="button" class="password-toggle" id="PasswordToggle" tabindex="-1">
+                            <svg id="EyeIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 4.5C7 4.5 2.73 7.61 1 12C2.73 16.39 7 19.5 12 19.5C17 19.5 21.27 16.39 23 12C21.27 7.61 17 4.5 12 4.5ZM12 17C9.24 17 7 14.76 7 12C7 9.24 9.24 7 12 7C14.76 7 17 9.24 17 12C17 14.76 14.76 17 12 17ZM12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9Z" fill="white" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="remember-forgot">
+                    <label class="checkbox-wrapper">
+                        <input type="checkbox" id="RememberMe" checked>
+                        <span class="checkbox-label">Stay signed in</span>
+                    </label>
+                    <a href="https://discord.gg/GJf3neUncp" class="forgot-link" target="_blank">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="login-button" id="LoginBtn">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="signup-container">
+                Don't have an account?
+                <a href="https://discord.com/channels/1185620726695342260/1210499602885640213" class="signup-link" target="_blank">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification-container" id="NotificationContainer"></div>
+
+    <script src="LoginPage.js"></script>
+</body>
+</html>

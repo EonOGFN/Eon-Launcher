@@ -4,9 +4,9 @@ using Newtonsoft.Json;
 
 class UserSettings
 {
-    private static readonly string RootDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Eon Launcher");
+    private static readonly string RootDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Project Eon");
 
-    private static readonly string SaveFile = Path.Combine(RootDirectory, "settings.json");
+    private static readonly string SaveFile = Path.Combine(RootDirectory, "Config.json");
 
     public static void SaveSettings()
     {

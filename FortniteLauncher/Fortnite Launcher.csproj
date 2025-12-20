@@ -102,21 +102,35 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="Content\Texture\Branding\Eon.ico" />
+		<Content Include="Content\Texture\Branding\Eon.ico">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 		<Content Include="Content\Texture\Icons\IC_Download.svg" />
 		<Content Include="Content\Texture\Icons\IC_Leaderboard.svg" />
 		<Content Include="Content\Texture\Icons\IC_Play.svg" />
 		<Content Include="Content\Texture\Icons\IC_ServerStatus.svg" />
+		<Content Include="Content\Texture\Icons\IC_Settings.svg" />
 		<Content Include="Content\Texture\Icons\IC_Shop.svg" />
 		<Content Include="Content\Texture\UI\T_Banner.png" />
 		<Content Include="Content\Texture\UI\T_BattleBus.png" />
-		<Content Include="Content\Texture\UI\T_Donate.png">
+		<Content Include="Content\Texture\UI\T_Donate.png" />
+		<Content Include="Content\Texture\UI\T_Tiktok.png" />
+		<Content Include="Source\UI\Pages\Authentication\Public\LoginPage.css">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Content Include="Content\Texture\UI\T_Tiktok.png" />
+		<Content Include="Source\UI\Pages\Authentication\Public\LoginPage.html">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Source\UI\Pages\Authentication\Public\LoginPage.js">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 
 	<ItemGroup>
 	  <PRIResource Remove="Content\Font\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Source\UI\Pages\Authentication\Public\" />
 	</ItemGroup>
 </Project>

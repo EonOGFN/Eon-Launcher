@@ -6,23 +6,22 @@ namespace FortniteLauncher.Pages
     public sealed partial class MainShellPage : Page
     {
         public static NavigationView STATIC_MainNavigation;
+
         public MainShellPage()
         {
             this.InitializeComponent();
             NavigationService.InitializeNavigationService(MainNavigation, MainBreadcrumb, RootFrame);
-
             MainNavigation.SelectedItem = PlayPageItem;
-
         }
 
         private void MainNavigation_SelectionChanged(NavigationView Sender, NavigationViewSelectionChangedEventArgs Args)
         {
-            if (Args.IsSettingsSelected) { NavigationService.Navigate(typeof(SettingsPage), true); }
             if ((Args.SelectedItem as NavigationViewItem) == PlayPageItem) { NavigationService.Navigate(typeof(PlayPage), true); NavigationService.ChangeBreadcrumbVisibility(false); }
             if ((Args.SelectedItem as NavigationViewItem) == DownloadsItem) { NavigationService.Navigate(typeof(DownloadsPage), true); }
             if ((Args.SelectedItem as NavigationViewItem) == ItemShopItem) { NavigationService.Navigate(typeof(ItemShopPage), true); }
             if ((Args.SelectedItem as NavigationViewItem) == LeaderboardItem) { NavigationService.Navigate(typeof(LeaderboardPage), true); }
             if ((Args.SelectedItem as NavigationViewItem) == ServerStatusItem) { NavigationService.Navigate(typeof(ServerStatusPage), true); }
+            if ((Args.SelectedItem as NavigationViewItem) == SettingsItem) { NavigationService.Navigate(typeof(SettingsPage), true); }
             ElementSoundPlayer.Play(ElementSoundKind.Invoke);
         }
 

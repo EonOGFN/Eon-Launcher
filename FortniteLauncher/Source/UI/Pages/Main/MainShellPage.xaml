@@ -13,7 +13,7 @@
         <NavigationView x:Name="MainNavigation"
                         Loaded="MainNavigation_Loaded"
                         PaneDisplayMode="Left"
-                        IsSettingsVisible="True"
+                        IsSettingsVisible="False"
                         IsBackButtonVisible="Collapsed"
                         IsPaneToggleButtonVisible="False"
                         AlwaysShowHeader="True"
@@ -119,41 +119,17 @@
                 </NavigationViewItem>
             </NavigationView.MenuItems>
 
-            <NavigationView.PaneFooter>
-                <Button x:Name="PaneContent"
-                        Visibility="Collapsed"
-                        Padding="6"
-                        Background="Transparent"
-                        BorderThickness="1"
-                        Click="PaneContent_Click"
-                        VerticalContentAlignment="Center"
-                        BorderBrush="Transparent"
-                        Margin="4,2,4,2"
-                        HorizontalAlignment="Stretch"
-                        HorizontalContentAlignment="Left"
-                        FontWeight="SemiBold">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0">
-                            <Grid HorizontalAlignment="Left">
-                                <Grid x:Name="PFP" VerticalAlignment="Center">
-                                    <Ellipse Width="50" Height="50">
-                                        <Ellipse.Fill>
-                                            <ImageBrush ImageSource="/Assets/PFP.jpg"/>
-                                        </Ellipse.Fill>
-                                    </Ellipse>
-                                </Grid>
-                            </Grid>
-                        </StackPanel>
-                        <AppBarSeparator Grid.Column="1" Margin="8,0,0,0"/>
-                        <FontIcon Glyph="&#xE713;" Grid.Column="2" VerticalAlignment="Center" Margin="8,0,0,0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                    </Grid>
-                </Button>
-            </NavigationView.PaneFooter>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem x:Name="SettingsItem">
+                    <NavigationViewItem.Icon>
+                        <ImageIcon Width="24" Height="24" Margin="-4">
+                            <ImageIcon.Source>
+                                <SvgImageSource UriSource="ms-appx:///Content/Texture/Icons/IC_Settings.svg"/>
+                            </ImageIcon.Source>
+                        </ImageIcon>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.FooterMenuItems>
 
             <Frame x:Name="RootFrame" Margin="0,0,0,0"/>
         </NavigationView>
