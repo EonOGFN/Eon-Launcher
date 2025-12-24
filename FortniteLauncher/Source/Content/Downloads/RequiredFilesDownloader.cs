@@ -7,8 +7,23 @@ using System;
 
 class RequiredFilesDownloader
 {
-    private static readonly string[] DownloadMessages = new[]
+    private static readonly Random Randomizer = new();
+
+    public static async Task Download()
     {
+        ShowDownloadMessage();
+
+        await PakChunk.EonPak();
+        await PakChunk.BubbleBuilds();
+
+        await EAC.Execute(EACOperation.Installation);
+
+        await RedirectHandler.DownloadFile();
+        await D3DCompilerCheck.DownloadFile();
+    }
+
+    private static readonly string[] DownloadMessages = new[]
+{
         "Almost done, please wait",
         "Almost ready to go",
         "Almost there, please wait",
@@ -25,23 +40,6 @@ class RequiredFilesDownloader
         "You're just moments away",
     };
 
-    private static readonly Random Randomizer = new();
-
-    public static async Task Download()
-    {
-        ShowDownloadMessage();
-
-        await PakChunk.EonPak();
-        await PakChunk.BubbleBuilds();
-
-        if (Definitions.bEnableEAC)
-        {
-            await EAC.DeleteFiles();
-            await EAC.ExtractEAC();
-        }
-
-        await RedirectHandler.DownloadFile();
-    }
 
     private static void ShowDownloadMessage()
     {

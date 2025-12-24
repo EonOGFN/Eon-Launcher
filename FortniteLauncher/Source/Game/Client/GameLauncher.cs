@@ -11,7 +11,7 @@ class Fortnite
             if (Anticheat.CheckForCorruption(GamePath) != Anticheat.EPlayStatus.Playable)
                 return;
 
-            await EAC.InitializeComponent();
+            await EAC.Execute(EACOperation.Initialize);
             await FNProc.Launch($"{GamePath}\\FortniteGame\\Binaries\\Win64\\FortniteLauncher.exe");
             await FNProc.Launch($"{GamePath}\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping_BE.exe");
             await FNProc.Launch($"{GamePath}\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping_EAC.exe");

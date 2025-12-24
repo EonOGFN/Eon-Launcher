@@ -12,10 +12,13 @@ class PakChunk
             return;
         }
 
-       await DownloadService.File($"{Definitions.CDN_URL}/S17_Univeral.pak", GamePath, "z_pakchunkEon-WindowsClient_P.pak");
-       await DownloadService.File($"{Definitions.CDN_URL}/S17_Univeral.sig", GamePath, "z_pakchunkEon-WindowsClient_P.sig");
-       await DownloadService.File($"{Definitions.CDN_URL}/z_pakchunkEon-WindowsClient_P.ucas", GamePath, "z_pakchunkEon-WindowsClient_P.ucas");
-       await DownloadService.File($"{Definitions.CDN_URL}/z_pakchunkEon-WindowsClient_P.utoc", GamePath, "z_pakchunkEon-WindowsClient_P.utoc");
+        foreach (var Mods in Directory.GetFiles(GamePath, "*Eon*"))
+            File.Delete(Mods);
+
+       await DownloadService.File($"{Definitions.CDN_URL}/EonMods.ucas", GamePath, "pakchunkEon-WindowsClient_p.ucas");
+       await DownloadService.File($"{Definitions.CDN_URL}/EonMods.utoc", GamePath, "pakchunkEon-WindowsClient_p.utoc");
+       await DownloadService.File($"{Definitions.CDN_URL}/S17_Univeral.pak", GamePath, "pakchunkEon-WindowsClient_p.pak");
+       await DownloadService.File($"{Definitions.CDN_URL}/S17_Univeral.sig", GamePath, "pakchunkEon-WindowsClient_p.sig");
     }
 
     public static async Task BubbleBuilds()
@@ -26,15 +29,15 @@ class PakChunk
             return;
         }
 
-        foreach (var Mod in new[] { "z_pakchunkLowMesh-WindowsClient_P.pak", "z_pakchunkLowMesh-WindowsClient_P.sig", "z_pakchunkLowMesh-WindowsClient_P.ucas", "z_pakchunkLowMesh-WindowsClient_P.utoc" })
-            File.Delete(Path.Combine(GamePath, Mod));
+        foreach (var Mods in Directory.GetFiles(GamePath, "*LowMesh*"))
+            File.Delete(Mods);
 
         if (GlobalSettings.Options.IsBubbleBuildsEnabled)
         {
-            await DownloadService.File($"{Definitions.CDN_URL}/S17_Univeral.pak", GamePath, "z_pakchunkLowMesh-WindowsClient_P.pak");
-            await DownloadService.File($"{Definitions.CDN_URL}/S17_Univeral.sig", GamePath, "z_pakchunkLowMesh-WindowsClient_P.sig");
-            await DownloadService.File($"{Definitions.CDN_URL}/z_pakchunkLowMesh-WindowsClient_P.ucas", GamePath, "z_pakchunkLowMesh-WindowsClient_P.ucas");
-            await DownloadService.File($"{Definitions.CDN_URL}/z_pakchunkLowMesh-WindowsClient_P.utoc", GamePath, "z_pakchunkLowMesh-WindowsClient_P.utoc");
+            await DownloadService.File($"{Definitions.CDN_URL}/LowMesh.ucas", GamePath, "pakchunkLowMesh-WindowsClient_p.ucas");
+            await DownloadService.File($"{Definitions.CDN_URL}/LowMesh.utoc", GamePath, "pakchunkLowMesh-WindowsClient_p.utoc");
+            await DownloadService.File($"{Definitions.CDN_URL}/S17_Univeral.pak", GamePath, "pakchunkLowMesh-WindowsClient_p.pak");
+            await DownloadService.File($"{Definitions.CDN_URL}/S17_Univeral.sig", GamePath, "pakchunkLowMesh-WindowsClient_p.sig");
         }
     }
 }

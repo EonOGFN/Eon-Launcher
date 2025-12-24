@@ -49,11 +49,11 @@ class Anticheat
 
         foreach (var Extension in Extensions)
         {
-            ContentFiles.Add($"z_pakchunkEon-WindowsClient_P{Extension}");
+            ContentFiles.Add($"pakchunkEon-WindowsClient_p{Extension}");
 
             if (GlobalSettings.Options.IsBubbleBuildsEnabled)
             {
-                ContentFiles.Add($"z_pakchunkLowMesh-WindowsClient_P{Extension}");
+                ContentFiles.Add($"pakchunkLowMesh-WindowsClient_p{Extension}");
             }
         }
 

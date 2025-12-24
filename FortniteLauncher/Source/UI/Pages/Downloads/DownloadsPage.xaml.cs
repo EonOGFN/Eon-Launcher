@@ -76,6 +76,12 @@ namespace FortniteLauncher.Pages
                 };
                 Picker.FileTypeFilter.Add("*");
 
+                if (GlobalSettings.Windows == null)
+                {
+                    DialogService.ShowSimpleDialog("Window reference is null.", "Error");
+                    return;
+                }
+
                 IntPtr WindowHandle = WinRT.Interop.WindowNative.GetWindowHandle(GlobalSettings.Windows);
                 WinRT.Interop.InitializeWithWindow.Initialize(Picker, WindowHandle);
 

@@ -13,13 +13,14 @@
 		<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 		<WindowsPackageType>None</WindowsPackageType>
 		<ApplicationIcon>Content\Texture\Branding\Eon.ico</ApplicationIcon>
+		<ApplicationManifest>Source\Core\Manifest\Eon.manifest</ApplicationManifest>
 		<AssemblyName>Eon</AssemblyName>
 		<SignAssembly>False</SignAssembly>
 		<AssemblyOriginatorKeyFile></AssemblyOriginatorKeyFile>
 		<Company>Eon</Company>
 		<Product>Eon</Product>
-		<Authors>Rio</Authors>
-		<Copyright>Rio</Copyright>
+		<Authors>David</Authors>
+		<Copyright>David</Copyright>
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>

@@ -76,15 +76,17 @@ namespace FortniteLauncher.Pages
 
             if (!PathHelper.IsPathValid(GlobalSettings.Options.FortnitePath))
             {
-                DialogService.ShowSimpleDialog("Fortnite path not found. Please check your installation and try again.", "Invalid Fortnite Path");
+                DialogService.ShowSimpleDialog("You haven't selected a Fortnite installation path yet. Go to the Downloads tab and select your game folder.", "Installation Path Required");
                 UI.ShowProgressRing((SettingsCard)Sender, false);
                 return;
             }
 
             ShowDownloadProgress();
             UI.ShowProgressRing((SettingsCard)Sender, true);
+
             await Processes.ForceCloseFortnite();
             await Fortnite.Launch(GlobalSettings.Options.FortnitePath);
+
             DownloadInfo.IsOpen = false;
         }
 

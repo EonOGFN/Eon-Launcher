@@ -10,6 +10,8 @@ namespace FortniteLauncher.Pages
 {
     public partial class LoginPage : Page
     {
+        private bool IsInitialized = false;
+
         public LoginPage()
         {
             this.InitializeComponent();
@@ -21,25 +23,35 @@ namespace FortniteLauncher.Pages
             {
                 await LoginWebView.EnsureCoreWebView2Async();
 
+                if (LoginWebView.CoreWebView2 == null)
+                {
+                    DialogService.ShowSimpleDialog("Failed to initialize WebView2. CoreWebView2 is null.", "Error");
+                    return;
+                }
+
+                LoginWebView.CoreWebView2.WebMessageReceived += MessageReceived;
+
                 string BasePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Source", "UI", "Pages", "Authentication", "Public");
                 string HtmlPath = Path.Combine(BasePath, "LoginPage.html");
                 string CssPath = Path.Combine(BasePath, "LoginPage.css");
                 string JsPath = Path.Combine(BasePath, "LoginPage.js");
 
-                if (File.Exists(HtmlPath) && File.Exists(CssPath) && File.Exists(JsPath))
+                if (!File.Exists(HtmlPath) || !File.Exists(CssPath) || !File.Exists(JsPath))
                 {
-                    string HtmlContent = File.ReadAllText(HtmlPath);
-                    string CssContent = File.ReadAllText(CssPath);
-                    string JsContent = File.ReadAllText(JsPath);
-
-                    string CombinedHtml = HtmlContent
-                        .Replace("<link rel=\"stylesheet\" href=\"LoginPage.css\">", $"<style>{CssContent}</style>")
-                        .Replace("<script src=\"LoginPage.js\"></script>", $"<script>{JsContent}</script>");
-
-                    LoginWebView.NavigateToString(CombinedHtml);
+                    DialogService.ShowSimpleDialog($"Required files not found at: {BasePath}", "Error");
+                    return;
                 }
 
-                LoginWebView.CoreWebView2.WebMessageReceived += MessageReceived;
+                string HtmlContent = File.ReadAllText(HtmlPath);
+                string CssContent = File.ReadAllText(CssPath);
+                string JsContent = File.ReadAllText(JsPath);
+
+                string CombinedHtml = HtmlContent
+                    .Replace("<link rel=\"stylesheet\" href=\"LoginPage.css\">", $"<style>{CssContent}</style>")
+                    .Replace("<script src=\"LoginPage.js\"></script>", $"<script>{JsContent}</script>");
+
+                LoginWebView.NavigateToString(CombinedHtml);
+                IsInitialized = true;
             }
             catch (Exception Exception)
             {
@@ -133,6 +145,9 @@ namespace FortniteLauncher.Pages
 
         private async Task SendMessageToWebView(object Data)
         {
+            if (IsInitialized == false || LoginWebView.CoreWebView2 == null)
+                return;
+
             try
             {
                 string Json = JsonSerializer.Serialize(Data);

@@ -34,12 +34,6 @@ namespace FortniteLauncher.Pages
             }
         }
 
-        private void PaneContent_Click(object Sender, RoutedEventArgs Event)
-        {
-            MainNavigation.SelectedItem = null;
-            NavigationService.Navigate(typeof(SettingsPage), true);
-        }
-
         private void MainNavigation_Loaded(object Sender, RoutedEventArgs Event)
         {
             STATIC_MainNavigation = MainNavigation;
