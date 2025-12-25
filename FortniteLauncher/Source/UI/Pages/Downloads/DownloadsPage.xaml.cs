@@ -1,10 +1,11 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
-using System.IO;
-using Windows.Storage.Pickers;
-using System.Linq;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Microsoft.Windows.Storage.Pickers;
+
 
 namespace FortniteLauncher.Pages
 {
@@ -41,9 +42,9 @@ namespace FortniteLauncher.Pages
         private async void DeleteBuild(object Sender, RoutedEventArgs EventArgs)
         {
             string ConfirmationMessage = $"Are you sure you want to remove Fortnite Version {ProjectDefinitions.Build} from your computer? This action cannot be undone.";
-            bool bConfirmed = await DialogService.YesOrNoDialog(ConfirmationMessage, $"Deleting {ProjectDefinitions.Name}");
+            bool Confirmed = await DialogService.YesOrNoDialog(ConfirmationMessage, $"Deleting {ProjectDefinitions.Name}");
 
-            if (!bConfirmed)
+            if (!Confirmed)
             {
                 DialogService.ShowSimpleDialog($"Your request to remove Fortnite Version {ProjectDefinitions.Build} has been canceled. No changes were made.", "Cancellation Confirmed");
                 return;
@@ -62,30 +63,27 @@ namespace FortniteLauncher.Pages
             }
             catch (Exception Exception)
             {
-                DialogService.ShowSimpleDialog($"{Exception.Message}", "An error occurred please report this to a moderator.");
+                DialogService.ShowSimpleDialog($"An error occurred: {Exception.Message}", "Error");
             }
         }
 
         private async void ChangeInstallPath(object Sender, RoutedEventArgs EventArgs)
         {
+            if (Sender is not Button Button)
+                return;
+
+            Button.IsEnabled = false;
+
             try
             {
-                FolderPicker Picker = new FolderPicker
-                {
-                    ViewMode = PickerViewMode.Thumbnail
-                };
+                var Picker = new FolderPicker(Button.XamlRoot.ContentIslandEnvironment.AppWindowId);
+                Picker.CommitButtonText = "Select Folder";
+                Picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+                Picker.ViewMode = PickerViewMode.Thumbnail;
                 Picker.FileTypeFilter.Add("*");
 
-                if (GlobalSettings.Windows == null)
-                {
-                    DialogService.ShowSimpleDialog("Window reference is null.", "Error");
-                    return;
-                }
-
-                IntPtr WindowHandle = WinRT.Interop.WindowNative.GetWindowHandle(GlobalSettings.Windows);
-                WinRT.Interop.InitializeWithWindow.Initialize(Picker, WindowHandle);
-
                 var SelectedFolder = await Picker.PickSingleFolderAsync();
+
                 if (SelectedFolder == null)
                 {
                     DialogService.ShowSimpleDialog("No folder was selected. Please select a valid installation folder.", "No Folder Selected");
@@ -93,11 +91,11 @@ namespace FortniteLauncher.Pages
                 }
 
                 string FolderPath = SelectedFolder.Path;
-                string[] CompressedExtensions = { ".rar", ".zip" };
+                string[] CompressedExtensions = { ".rar", ".zip", ".7z" };
 
                 if (CompressedExtensions.Any(Extension => FolderPath.EndsWith(Extension, StringComparison.OrdinalIgnoreCase)))
                 {
-                    DialogService.ShowSimpleDialog("The selected file appears to be compressed. Please extract it using a third party extraction tool. You can find extraction guides on YouTube.", "Compressed File Error");
+                    DialogService.ShowSimpleDialog("The selected file appears to be compressed. Please extract it using a third party extraction tool.", "Compressed File Error");
                     return;
                 }
 
@@ -119,17 +117,28 @@ namespace FortniteLauncher.Pages
             }
             catch (Exception Exception)
             {
-                DialogService.ShowSimpleDialog(Exception.ToString(), "Change Install Path");
+                DialogService.ShowSimpleDialog($"An error occurred: {Exception.Message}", "Error");
+            }
+            finally
+            {
+                Button.IsEnabled = true;
             }
         }
 
         private void DownloadBuild(object Sender, RoutedEventArgs EventArgs)
         {
-            Process.Start(new ProcessStartInfo
+            try
             {
-                FileName = ProjectDefinitions.DownloadBuildURL,
-                UseShellExecute = true
-            });
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = ProjectDefinitions.DownloadBuildURL,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception Exception)
+            {
+                DialogService.ShowSimpleDialog($"Failed to open download URL: {Exception.Message}", "Error");
+            }
         }
     }
 }

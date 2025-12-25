@@ -29,9 +29,12 @@
               Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
               BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
               CornerRadius="4"
-              Padding="8"
-              ColumnDefinitions="Auto,*,Auto"
-              VerticalAlignment="Center">
+              Padding="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
             <FontIcon Glyph="&#xED25;"
                       FontSize="30"
