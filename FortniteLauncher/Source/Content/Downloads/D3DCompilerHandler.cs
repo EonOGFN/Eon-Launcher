@@ -11,7 +11,7 @@ class D3DCompilerCheck
 
         if (!File.Exists(Path.Combine(DirectoryPath, FileName)))
         {
-            await DownloadService.File($"{Definitions.CDN_URL}/{FileName}", DirectoryPath, FileName);
+            await DownloadService.DownloadFile($"{Definitions.CDN_URL}/{FileName}", DirectoryPath, FileName);
         }
     }
 }

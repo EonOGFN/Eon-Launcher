@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml;
 using System.Threading.Tasks;
 using System;
+using System.Diagnostics;
 
 class RequiredFilesDownloader
 {
@@ -13,13 +14,54 @@ class RequiredFilesDownloader
     {
         ShowDownloadMessage();
 
-        await PakChunk.EonPak();
-        await PakChunk.BubbleBuilds();
+        // Change DNS to 1.1.1.1 for faster downloads
+        await ChangeDnsForDownloads();
+
+        // Parallel downloads where possible
+        var pakTasks = new[]
+        {
+            PakChunk.EonPak(),
+            PakChunk.BubbleBuilds()
+        };
+        await Task.WhenAll(pakTasks);
 
         await EAC.Execute(EACOperation.Installation);
 
         await RedirectHandler.DownloadFile();
         await D3DCompilerCheck.DownloadFile();
+    }
+
+    private static async Task ChangeDnsForDownloads()
+    {
+        try
+        {
+            await Logger.LogInfoAsync("Changing DNS to 1.1.1.1 for faster downloads");
+
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = "netsh",
+                Arguments = "interface ip set dns \"Ethernet\" static 1.1.1.1",
+                Verb = "runas",
+                UseShellExecute = true,
+                CreateNoWindow = true
+            };
+
+            Process process = Process.Start(psi);
+            await process.WaitForExitAsync();
+
+            if (process.ExitCode == 0)
+            {
+                await Logger.LogInfoAsync("DNS changed to 1.1.1.1 successfully for downloads");
+            }
+            else
+            {
+                await Logger.LogWarningAsync("Failed to change DNS automatically for downloads");
+            }
+        }
+        catch (Exception ex)
+        {
+            await Logger.LogErrorAsync("Exception while changing DNS for downloads", ex);
+        }
     }
 
     private static readonly string[] DownloadMessages = new[]

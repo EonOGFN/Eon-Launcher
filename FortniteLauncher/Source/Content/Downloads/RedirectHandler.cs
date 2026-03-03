@@ -18,7 +18,7 @@ class RedirectHandler
             return;
         }
 
-        DownloadService.File($"{Definitions.CDN_URL}/GFSDK_Aftermath_Lib.x64.dll", Path, "GFSDK_Aftermath_Lib.x64.dll");
+        await DownloadService.DownloadFile($"{Definitions.CDN_URL}/GFSDK_Aftermath_Lib.x64.dll", Path, "GFSDK_Aftermath_Lib.x64.dll");
     }
 }
 

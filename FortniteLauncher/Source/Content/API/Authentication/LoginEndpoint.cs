@@ -2,6 +2,7 @@
 using RestSharp;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Net;
 
 public enum VerifyLoginStatus { Success, Banned, Deny, Invalid, Error, Outdated, Donator }
 
@@ -18,6 +19,10 @@ class Authenticator
         try
         {
             var ApiResponse = await Client.ExecuteAsync(Request);
+            
+            if (ApiResponse.StatusCode == HttpStatusCode.NotFound || ApiResponse.StatusCode == HttpStatusCode.InternalServerError)
+                return await ErrorResponse("Server is currently unavailable. Please try again later.", "Server Error");
+            
             if (string.IsNullOrWhiteSpace(ApiResponse.Content))
                 return await ErrorResponse("Please check your network connection or try again later. Make sure you're on a stable network without a VPN, mobile cellular data, or any network restrictions like firewalls or proxy settings that could interfere.", "Network Connection Error");
 

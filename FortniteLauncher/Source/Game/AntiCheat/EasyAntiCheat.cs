@@ -41,8 +41,8 @@ class EAC
 
     private static async Task DownloadFiles()
     {
-        await DownloadService.File($"{Definitions.CDN_URL}/Eon_EAC.exe", GamePath, "Eon_EAC.exe");
-        await DownloadService.File($"{Definitions.CDN_URL}/EasyAntiCheat.zip", GamePath, "EasyAntiCheat.zip");
+        await DownloadService.DownloadFile($"{Definitions.CDN_URL}/Eon_EAC.exe", GamePath, "Eon_EAC.exe");
+        await DownloadService.DownloadFile($"{Definitions.CDN_URL}/EasyAntiCheat.zip", GamePath, "EasyAntiCheat.zip");
     }
 
     private static async Task ExtractArchive()

@@ -9,50 +9,77 @@ class DownloadService
     {
         MaxConnectionsPerServer = int.MaxValue
     })
-    { Timeout = System.Threading.Timeout.InfiniteTimeSpan };
+    { Timeout = TimeSpan.FromMinutes(10) }; // Reasonable timeout instead of infinite
 
     public static string DownloadProgress { get; private set; } = "This may take several minutes, depending on your internet speed.";
     public static event Action<string> ProgressChanged;
 
-    public static async Task File(string URL, string FilePath, string FileName)
+    public static async Task DownloadFile(string URL, string FilePath, string FileName, int maxRetries = 3, bool useCache = false)
     {
-        try
+        string FullPath = Path.Combine(FilePath, FileName);
+
+        // Simple caching: skip if file exists and useCache is true
+        if (useCache && File.Exists(FullPath))
         {
-            string FullPath = Path.Combine(FilePath, FileName);
+            await Logger.LogInfoAsync($"File already exists, skipping download: {FileName}");
+            return;
+        }
 
-            using var Response = await HttpClient.GetAsync(URL, HttpCompletionOption.ResponseHeadersRead);
-            Response.EnsureSuccessStatusCode();
+        int retryCount = 0;
 
-            long TotalBytes = Response.Content.Headers.ContentLength ?? -1L;
-            bool CanReportProgress = TotalBytes > 0;
-            long DownloadedBytes = 0;
-
-            await using var ContentStream = await Response.Content.ReadAsStreamAsync();
-            await using var FileStream = new FileStream(FullPath, FileMode.Create, FileAccess.Write, FileShare.None);
-
-            var Buffer = new byte[8192];
-            int BytesRead;
-
-            while ((BytesRead = await ContentStream.ReadAsync(Buffer)) > 0)
+        while (retryCount <= maxRetries)
+        {
+            try
             {
-                await FileStream.WriteAsync(Buffer.AsMemory(0, BytesRead));
-                DownloadedBytes += BytesRead;
+                await Logger.LogInfoAsync($"Starting download: {FileName} from {URL}");
 
-                if (CanReportProgress)
+                using var Response = await HttpClient.GetAsync(URL, HttpCompletionOption.ResponseHeadersRead);
+                Response.EnsureSuccessStatusCode();
+
+                long TotalBytes = Response.Content.Headers.ContentLength ?? -1L;
+                bool CanReportProgress = TotalBytes > 0;
+                long DownloadedBytes = 0;
+
+                await using var ContentStream = await Response.Content.ReadAsStreamAsync();
+                await using var FileStream = new FileStream(FullPath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                var Buffer = new byte[65536]; // Increased buffer size for faster downloads
+                int BytesRead;
+
+                while ((BytesRead = await ContentStream.ReadAsync(Buffer)) > 0)
                 {
-                    double ProgressPercentage = (double)DownloadedBytes / TotalBytes * 100;
-                    DownloadProgress = $"{FileName} Installation:\n{FormatSize(DownloadedBytes)} / {FormatSize(TotalBytes)} ({ProgressPercentage:F2}%)";
-                    ProgressChanged?.Invoke(DownloadProgress);
+                    await FileStream.WriteAsync(Buffer.AsMemory(0, BytesRead));
+                    DownloadedBytes += BytesRead;
+
+                    if (CanReportProgress)
+                    {
+                        double ProgressPercentage = (double)DownloadedBytes / TotalBytes * 100;
+                        DownloadProgress = $"{FileName} Installation:\n{FormatSize(DownloadedBytes)} / {FormatSize(TotalBytes)} ({ProgressPercentage:F2}%)";
+                        ProgressChanged?.Invoke(DownloadProgress);
+                    }
                 }
+
+                await Logger.LogInfoAsync($"Download completed: {FileName}");
+                return;
             }
-        }
-        catch (HttpRequestException Error)
-        {
-            ShowError(Error, FilePath, FileName);
-        }
-        catch (Exception Error)
-        {
-            ShowError(Error, FilePath, FileName);
+            catch (HttpRequestException Error)
+            {
+                retryCount++;
+                if (retryCount > maxRetries)
+                {
+                    await Logger.LogErrorAsync($"Download failed after {maxRetries} retries: {FileName}", Error);
+                    ShowError(Error, FilePath, FileName);
+                    return;
+                }
+                await Logger.LogWarningAsync($"Download retry {retryCount} for {FileName}: {Error.Message}");
+                await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, retryCount))); // Exponential backoff
+            }
+            catch (Exception Error)
+            {
+                await Logger.LogErrorAsync($"Unexpected error during download: {FileName}", Error);
+                ShowError(Error, FilePath, FileName);
+                return;
+            }
         }
     }
 
